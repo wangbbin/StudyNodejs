@@ -15,8 +15,13 @@ MongoClient.connect(url, options, function(err, db) {
 		console.error(err);
 		return;
 	}else{
-		console.log("Connected correctly to server");
-		db.close();
+    db.logout(function(err, result){
+      if(!err){
+        console.log('logged out');
+      }
+      console.log("connection close");
+      db.close();
+    });
 	}
 });
 
