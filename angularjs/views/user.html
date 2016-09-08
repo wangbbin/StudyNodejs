@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+	<meta http-equiv="X-UA-Compatiable" content="IE=Edge">
+	<meta charset="UTF-8">
+	<title>User login and sessions signup</title>
+	<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+	<div class="form-container" ng-controller="myController">
+		<p class="form-header">User Profile</p>
+		<form action="/user/update" method="POST">
+			<label for="">Username: </label>
+				<input type="text" name="username" ng-model="user.username" disabled><br>
+			<label for="">Email: </label>
+				<input type="email" name="email" ng-model="user.email"><br>
+			<label for="">Favorite Color: </label>
+				<input type="text" name="color" ng-model="user.color">
+			<input type="submit" value="save">
+		</form>
+	</div>
+	<form action="/user/delete" method="POST">
+		<input type="submit" value="Delete User">
+	</form>
+	<hr><%= msg %>
+	<hr>{{ error }}
+	<script src="/lib/angular.js"></script>
+	<script src="/static/js/my_app.js"></script>
+</body>
+</html>
