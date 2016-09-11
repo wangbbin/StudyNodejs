@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Slides</title>
+	<style>
+		*{margin: 0;padding: 0;}
+		body{padding: 50px 0;
+			background-color: #fff;
+			font-size: 14px;
+			color: #555;
+			-webkit-font-smoothing: antialiased;/*字体抗锯齿*/
+		}
+
+		.slider .main .main-i,
+		.slider .main,
+		.slider{
+			width: 100%;
+			height: 300px;
+			position:  relative;
+		}
+
+		/*幻灯片*/
+		.slider .main{
+			overflow: hidden;
+		}
+
+		.slider .main .main-i{}
+		.slider .main .main-i img{
+			width: 100%;
+			position: absolute;
+			left: 0;
+			top: 50%;
+			z-index: 1;
+		}
+		.slider .main .main-i .caption{
+			position: absolute;
+			right: 50%;
+			top: 30%;
+			z-index: 9;
+		}
+		.slider .main .main-i .caption h2{
+			font-size: 40px;
+			line-height: 50px;
+			color: #b5b5b5;
+			text-align: right;
+		}
+		.slider .main .main-i .caption h3{
+			font-size: 70px;
+			line-height: 70px;
+			color: #000;
+			text-align: right;
+		}
+
+		/*按钮控制*/
+		.slider .ctrl{
+			width: 100%;
+			height: 13px;
+			line-height: 13px;
+			text-align: center;
+			position: absolute;
+			left: 0;
+			bottom: -13px;
+		}
+
+		.slider .ctrl .ctrl-i{
+			display: inline-block;
+			width: 150px;
+			height: 13px;
+			background-color: #666;
+			box-shadow: 0 1px 1px rgba(0,0,0,.3);
+			position: relative;
+			margin-left: 1px;
+		}
+		.slider .ctrl .ctrl-i img{
+			width: 100%;
+			position: absolute;
+			left: 0;
+			bottom: 50px;
+			z-index: 1;
+			opacity: 0;
+			transition: all .2s;
+		}
+
+		/*hover*/
+		.slider .ctrl .ctrl-i:hover{
+			background-color: #f0f0f0;
+		}
+		.slider .ctrl .ctrl-i:hover img{
+			bottom: 13px;
+				-webkit-box-reflect:below 0px -webkit-gradient(
+					linear,
+					left top,
+					left bottom,
+					from(transparent),
+					color-stop(50%, transparent),
+					to(rgba(255,255,255,.3))
+				);
+			opacity: 1;
+		}
+
+		.slider .ctrl .ctrl-i_active:hover,
+		.slider .ctrl .ctrl-i_active{
+			background-color: #000;
+		}
+		.slider .ctrl .ctrl-i_active:hover img{
+			opacity: 0;
+		}
+
+		.slider .main .main-i{
+			opacity: 0;
+			position: absolute;
+			right: 50%;
+			top: 0;
+			-webkit-transition:all 0.5s;
+			z-index: 2;
+		}
+
+		.slider .main .main-i_right{
+			right: -50%;
+		}
+		.slider .main .main-i h2{
+			margin-right: 45px;
+		}
+		.slider .main .main-i h3{
+			margin-right: -45px;
+		}
+
+		.slider .main .main-i h2,
+		.slider .main .main-i h3{
+			opacity: 0;
+			-webkit-transition:all 1s .08s;
+		}
+
+		#main_backgroud,
+		.slider .main .main-i_active{
+			opacity: 1;
+			right: 0;
+		}
+		#main_backgroud{
+			z-index: 1;
+		}
+		.slider .main .main-i_active h2,
+		.slider .main .main-i_active h3{
+			margin-right: 0px;
+			opacity: 1;
+		}
+
+		.slider .main .main-i .caption{
+			margin-right: 13%;
+		}
+
+		.boxsize {  
+		        width: 300px;  
+		        height: 200px;  
+		        padding: 20px;  
+		        background-color: red
+		}  
+	</style>
+</head>
+<body>
+	<div class="slider">
+		<!-- 0. view -> template -->
+		<div class="main" id="template_main">
+			<div class="main-i {{css}}" id="main_{{index}}">
+				<div class="caption">
+					<h2>{{h1}}</h2>
+					<h3>{{h2}}</h3>
+				</div>
+				<img src="imgs/{{index}}.jpg" alt="" class="picture">
+			</div>
+		</div>
+		<div class="ctrl" id="template_ctrl">
+			<a class="ctrl-i" id="ctrl_{{index}}" href="javascript:switchSlider({{index}});" >
+				<img src="imgs/{{index}}.jpg" alt="">
+			</a>
+		</div>
+	</div>
+
+	<div class="boxsize"></div>
+
+	<script>
+	// 
+	// 1. data
+	var data = [
+		{img:1, h1:'Creative', h2:'DUEL'},
+		{img:2, h1:'Active', h2:'Picture'},
+	];
+
+	// 2. 
+	var g = function (id){
+		if (id.substr(0,1) == '.'){
+			return document.getElementsByClassName(id.substr(1));
+		}
+		return document.getElementById(id);
+	};
+
+	// 3.
+	function addSliders(){
+		// 3.1
+		var tpl_main = g('template_main').innerHTML
+																		.replace(/^\s*/, '')
+																		.replace(/$\s*/, '');
+		var tpl_ctrl = g('template_ctrl').innerHTML
+																		.replace(/^\s*/, '')
+																		.replace(/$\s*/, '');
+		//3.2 output
+		var out_main = [];
+		var out_ctrl = [];
+		for (var i = 0; i < data.length; i++) {
+			var _html_main = tpl_main.replace(/{{index}}/g, data[i].img)
+															.replace(/{{h1}}/g, data[i].h1)
+															.replace(/{{h2}}/g, data[i].h2)
+															.replace(/{{css}}/g, ['', 'main-i_right'][i%2]);
+			var _html_ctrl = tpl_ctrl.replace(/{{index}}/g, data[i].img);
+			out_main.push(_html_main);
+			out_ctrl.push(_html_ctrl);
+		}
+
+		// 3.3 
+		g('template_main').innerHTML = out_main.join('');
+		g('template_ctrl').innerHTML = out_ctrl.join('');
+
+		// 7
+		g('template_main').innerHTML += tpl_main.replace(/{{index}}/g, '{{index}}')
+															.replace(/{{h1}}/g, '')
+															.replace(/{{h2}}/g, '');
+		g('main_{{index}}').id = 'main_backgroud';
+
+
+	}
+
+	// 5
+	function switchSlider(n){
+		var main = g('main_' + n);
+		var ctrl = g('ctrl_' + n);
+
+		// 5.2
+		var clear_main = g('.main-i');
+		var clear_ctrl = g('.ctrl-i');
+
+		// 5.3
+		for (var i = 0; i < clear_ctrl.length; i++) {
+			clear_main[i].className = clear_main[i].className.replace(' main-i_active','');
+			clear_ctrl[i].className = clear_ctrl[i].className.replace(' ctrl-i_active','');
+		};
+
+		// 5.1
+		main.className += ' main-i_active';
+		ctrl.className += ' ctrl-i_active';
+
+		// 7.1
+		setTimeout(function (){
+			g('main_backgroud').innerHTML = main.innerHTML;
+		}, 1000);
+	}
+
+	// 6 margin-top
+	function pictureAdjust(){
+		var pictures = g('.picture');
+		for (var i = 0; i < pictures.length; i++) {
+			pictures[i].style.marginTop =( pictures[i].clientHeight / 2 ) * -1 + 'px'; 
+		};
+	}
+
+	window.onload = function (){
+		addSliders();
+		switchSlider(1);
+		setTimeout(function (){
+			pictureAdjust();
+		}, 100)
+	};
+
+	</script>
+</body>
+</html>
