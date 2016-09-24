@@ -2,9 +2,14 @@
   "name": "drifter",
   "version": "0.0.1",
   "dependencies": {
+    "body-parser": "^1.15.2",
     "express": "^3",
-    "redis": "*",
+    "generic-pool": "*",
+    "mongoose": "^4.6.1",
     "node-uuid": "*",
-    "generic-pool": "*"
+    "redis": "*"
+  },
+  "devDependencies": {
+    "request": "*"
   }
 }
