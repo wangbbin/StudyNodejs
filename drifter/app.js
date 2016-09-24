@@ -53,8 +53,9 @@ app.get('/', function (req, res) {
         if (err) {
           return res.json({code: 0, msg: "获取漂流瓶失败，请重试"});
         }
-        return res.json(result);
+        res.json(result);
       });
+      return;
     }
     res.json(result);
   });
