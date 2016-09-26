@@ -2,9 +2,11 @@ import { Template } from 'meteor/templating';
 
 Session.setDefault("currentUrl", {index: "active", login: "", reg: ""});
 
-Template.container.currentUrl = function () {
-  return Session.get("currentUrl");
-};
+Template.container.helpers({
+		currentUrl: function () {
+	  return Session.get("currentUrl");
+	}
+});
 
 var urlRouter = Backbone.Router.extend({
   routes: {
@@ -53,9 +55,11 @@ Meteor.startup(function () {
   Backbone.history.start({pushState: true});
 });
 
-Template.nav.active = function () {
-  return Session.get("currentUrl");
-};
+Template.nav.helpers({
+	active() {
+		return Session.get("currentUrl");
+	}
+});
 
 Template.reg.events({
   'click #submit': function (evt) {
@@ -84,9 +88,11 @@ Template.reg.events({
 
 Session.setDefault("info", {success: "", error: ""});
 
-Template.info.info = function () {
-  return Session.get("info");
-};
+Template.info.helpers({
+	info: function () {
+	  return Session.get("info");
+	}
+});
 
 Template.login.events({
   'click #submit': function (evt) {
@@ -105,5 +111,32 @@ Template.login.events({
         Session.set("info", {success: "登陆成功", error: ""});
       }
     });
+  }
+});
+
+Posts = new Meteor.Collection("posts");
+
+Template.index.events({
+  'click #submit': function (evt) {
+    evt.preventDefault();
+    var $post = $("#post").val();
+    if ($post.length ===0 || $post.length >=140) {
+      Session.set("info", {success: "", error: "请将字数限制在 1-140 字"});
+      return;
+    }
+    Posts.insert({user: Meteor.user(), post: $post, time: new Date()}, function (err) {
+      if (err) {
+        Session.set("info", {success: "", error: err.reason});
+      } else {
+        Session.set("info", {success: "发表成功", error: ""});
+        $("#post").val("");
+      }
+    });
+  }
+});
+
+Template.index.helpers({
+	posts() {
+  	return Posts.find({}, {sort: {time: -1}});
   }
 });
