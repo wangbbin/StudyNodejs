@@ -22,8 +22,28 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/users', users);
+var users = {};//存储在线用户列表的对象
+
+app.get('/', function (req, res) {
+  if (req.cookies.user == null) {
+    res.redirect('/signin');
+  } else {
+    res.sendFile(__dirname + '/views/index.html');
+  }
+});
+app.get('/signin', function (req, res) {
+  res.sendFile(__dirname+'/views/signin.html');
+});
+app.post('/signin', function (req, res) {
+  if (users[req.body.name]) {
+    //存在，则不允许登陆
+    res.redirect('/signin');
+  } else {
+    //不存在，把用户名存入 cookie 并跳转到主页
+    res.cookie("user", req.body.name, {maxAge: 1000*60*60*24*30});
+    res.redirect('/');
+  }
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
