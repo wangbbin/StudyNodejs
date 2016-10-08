@@ -5,9 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-
 var app = express();
 
 // view engine setup
@@ -76,5 +73,30 @@ app.use(function(err, req, res, next) {
   });
 });
 
+var http = require('http');
 
-module.exports = app;
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
+io.sockets.on('connection', function (socket) {
+  //有人上线
+  socket.on('online', function (data) {
+    //将上线的用户名存储为 socket 对象的属性，以区分每个 socket 对象，方便后面使用
+    socket.name = data.user;
+    //users 对象中不存在该用户名则插入该用户名
+    if (!users[data.user]) {
+      users[data.user] = data.user;
+    }
+    //向所有用户广播该用户上线信息
+    io.sockets.emit('online', {users: users, user: data.user});
+  });
+});
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(3000);
