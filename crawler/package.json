@@ -9,10 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.0.1",
+    "cheerio": "^0.22.0",
+    "debug": "^2.2.0",
     "mysql": "^2.11.1",
-    "debug": "0.7.2",
-    "cheerio": "0.12.3",
-    "request": "2.27.0",
-    "async": "0.2.9"
+    "request": "^2.75.0"
   }
 }
