@@ -8,7 +8,7 @@ var app = express();
 // 配置 express
 
   app.set('views', __dirname + '/views');
-  //app.set('view engine', 'html');//模板引擎 默认使用的扩展名
+  //app.set('view engine', 'html');//模板引擎 设置使用的扩展名， 即可以不写.html后缀
   app.engine('html', require('ejs').__express);//用ejs 模板引擎 来处理 ".html" 后缀的文件:
   app.use('/public', express.static(path.join(__dirname, 'public')));
 
