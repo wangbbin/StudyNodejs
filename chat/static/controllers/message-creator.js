@@ -5,7 +5,10 @@ angular.module('technodeApp').controller('MessageCreatorCtrl', function ($scope,
 		if ($scope.newMessage == ''){
 			return ;
 		}
-		socket.emit('createMessage', $scope.newMessage);
+		socket.emit('createMessage', {
+			message: $scope.newMessage,
+			creator: $scope.me
+		});
 		$scope.newMessage = '';
 	};
 });
