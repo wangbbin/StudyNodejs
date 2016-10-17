@@ -5,6 +5,7 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var async = require('async');
 var Controllers = require('./controllers');
 
 var signedCookieParser = cookieParser('technode');
@@ -110,7 +111,7 @@ io.set('authorization', function (handshakeData, accept){
 					accept(err.message, false);
 				} else {
 					handshakeData.session = session;
-					console.log('session', handshakeData)
+					//console.log('session', handshakeData)
 					if (session && session._userId) {
 						accept(null, true);
 					} else {
@@ -121,7 +122,6 @@ io.set('authorization', function (handshakeData, accept){
 		}
 	});
 });
-var messages = [];
 var i = 0
 io.sockets.on('connection', function(socket){
 	//console.log(socket.request === handshakeData???)
@@ -134,27 +134,47 @@ io.sockets.on('connection', function(socket){
 			});
 		} else {
 			socket.broadcast.emit('online', user);
+			socket.broadcast.emit('messageAdded', {
+				content: user.name + 'Enter the chat room',
+				creator: {name: 'SYSTEM'},
+				createAt: new Date()
+			});
 		}
 	});
 
 	socket.on('getRoom', function (){
-		Controllers.User.getOnlineUsers(function (err, users){
+		async.parallel([
+				function (done){
+					Controllers.User.getOnlineUsers(done);
+				},
+				function (done){
+					Controllers.Message.read(done);
+				}
+			], function (err, results){
+				if (err) {
+					socket.emit('err', {
+						msg: err
+					});
+				} else {
+					socket.emit('roomData', {
+						users: results[0],
+						messages: results[1]
+					});
+				}
+			});
+	});
+
+	socket.on('createMessage', function (message){
+		Controllers.Message.create(message, function (err, message){
 			if (err) {
 				socket.emit('err', {
 					msg: err
 				});
 			} else {
-				socket.emit('roomData', {
-					users: users,
-					messages: messages
-				});
+				io.sockets.emit('messageAdded', message);
 			}
-		});
-	});
-
-	socket.on('createMessage', function (message){
-		messages.push(message);
-		io.sockets.emit('messageAdded', message);
+		})
+		
 	});
 
 	socket.on('disconnect', function (){
@@ -165,6 +185,11 @@ io.sockets.on('connection', function(socket){
 				});
 			} else {
 				socket.broadcast.emit('offline', user);
+				socket.broadcast.emit('messageAdded', {
+					content: user.name + 'Leave the chat room',
+					creator: {name: 'SYSTEM'},
+					createAt: new Date()
+				});
 			} 
 		});
 	});

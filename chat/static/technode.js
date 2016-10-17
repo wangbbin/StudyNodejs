@@ -1,6 +1,7 @@
 
-angular.module('technodeApp', ['ngRoute'])
+angular.module('technodeApp', ['ngRoute', 'angularMoment'])
 .run(function ($window, $rootScope, $http, $location){
+	$window.moment.locale('zh-cn');
 	$http({
 		url: '/api/validate',
 		method: 'get'
