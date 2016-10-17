@@ -7,7 +7,7 @@ angular.module('technodeApp', ['ngRoute', 'angularMoment'])
 		method: 'get'
 	}).success(function (user){
 		$rootScope.me = user;
-		$location.path('/');
+		$location.path('/rooms');
 	}).error(function (data){
 		$location.path('/login');
 	});
