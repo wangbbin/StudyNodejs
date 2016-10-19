@@ -19,6 +19,19 @@ angular.module('technodeApp').factory('socket', function ($rootScope){
 					}
 				});
 			});
+		},
+		once: function (eventName, callback){
+			socket.once(eventName, function (){
+				var args = arguments;
+				$rootScope.$apply(function (){
+					callback.apply(socket, args);
+				});
+			});
+		},
+		removeEventListener: function(eventList){
+			eventList.forEach(function(eventName){
+				socket.removeEventListener(eventName);
+			});
 		}
 	};
 });

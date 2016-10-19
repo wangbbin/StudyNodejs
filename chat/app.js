@@ -126,6 +126,7 @@ var i = 0
 io.sockets.on('connection', function(socket){
 	//console.log(socket.request === handshakeData???)
 	//user online or offline
+	//console.log(socket.rooms)
 	var _userId = socket.request.session._userId;
 	Controllers.User.online(_userId, function (err, user){
 		if (err) {
@@ -134,15 +135,15 @@ io.sockets.on('connection', function(socket){
 			});
 		} else {
 			socket.broadcast.emit('online', user);
-			socket.broadcast.emit('messageAdded', {
-				content: user.name + 'Enter the chat room',
-				creator: {name: 'SYSTEM'},
-				createAt: new Date()
-			});
+			// socket.broadcast.emit('messageAdded', {
+			// 	content: user.name + 'Enter the chat room',
+			// 	creator: {name: 'SYSTEM'},
+			// 	createAt: new Date()
+			// });
 		}
 	});
 
-	socket.on('getRoom', function (){
+	/*socket.on('getRoom', function (){
 		async.parallel([
 				function (done){
 					Controllers.User.getOnlineUsers(done);
@@ -162,22 +163,23 @@ io.sockets.on('connection', function(socket){
 					});
 				}
 			});
-	});
+	});*/
 
 	socket.on('createMessage', function (message){
+		console.log(socket.rooms, 'cm')
 		Controllers.Message.create(message, function (err, message){
 			if (err) {
 				socket.emit('err', {
 					msg: err
 				});
 			} else {
-				io.sockets.emit('messageAdded', message);
+				socket.in(message._roomId).broadcast.emit('messageAdded', message);
+				socket.emit('messageAdded', message);
 			}
 		})
-		
 	});
 
-	socket.on('disconnect', function (){
+	/*socket.on('disconnect', function (){
 		Controllers.User.offline(_userId, function (err, user){
 			if (err) {
 				socket.emit('err', {
@@ -192,7 +194,7 @@ io.sockets.on('connection', function(socket){
 				});
 			} 
 		});
-	});
+	});*/
 
 	socket.on('createRoom', function (room){
 		Controllers.Room.create(room, function (err, room){
@@ -208,16 +210,89 @@ io.sockets.on('connection', function(socket){
 		});
 	});
 
-	socket.on('getAllRooms', function (){
-		Controllers.Room.read(function (err, rooms){
+	socket.on('getAllRooms', function (data){
+		if (data && data._roomId) {
+			Controllers.Room.getById(data._roomId, function (err, room){
+				if (err){
+					socket.emit('err', {
+						msg: err
+					});
+				} else {
+					socket.emit('roomData.' + data._roomId, room);
+				}
+			})
+		} else {
+			Controllers.Room.read(function (err, rooms){
+				if (err){
+					socket.emit('err', {
+						msg: err
+					});
+				} else {
+					socket.emit('roomsData', rooms);
+				}
+			});
+		}
+	});
+
+	socket.on('joinRoom', function (join){
+		Controllers.User.joinRoom(join, function (err){
 			if (err){
 				socket.emit('err', {
 					msg: err
 				});
 			} else {
-				socket.emit('roomsData', rooms);
+				socket.join(join.room._id);
+				socket.emit('joinRoom.' + join.user._id, join);
+				socket.in(join.room._id).broadcast.emit('messageAdded', {
+					content: join.user.name + ' join ',
+					creator: {name: 'SYSTEM'},
+					createAt: new Date(),
+				});
+				socket.in(join.room._id).broadcast.emit('joinRoom', join);
 			}
 		});
+	});
+
+	socket.on('leaveRoom', function (leave){
+		console.log(socket.rooms, 'l')
+		Controllers.User.leaveRoom(leave, function (err){
+			if (err){
+				socket.emit('err', {
+					msg: err
+				});
+			} else {
+				socket.in(leave.room._id).broadcast.emit('messageAdded', {
+						content: leave.user.name + ' leave',
+						creator: {name: 'SYSTEM'},
+						createAt: new Date()
+				});
+				socket.leave(leave.room._id);
+				io.sockets.emit('leaveRoom', leave);
+			}
+		});
+	});
+
+	socket.on('disconnect', function (){
+		console.log(socket.rooms, 'c')
+		Controllers.User.offline(_userId, function (err, user){
+			if (err) {
+				socket.emit('err', {
+					msg: err
+				});
+			} else {
+				if (user._roomId) {
+					socket.in(user._roomId).broadcast.emit('leaveRoom', user);
+					socket.in(user._roomId).broadcast.emit('messageAdded', {
+						content: user.name + ' leave',
+						creator: {name: 'SYSTEM'},
+						createAt: new Date()
+					});
+					Controllers.User.leaveRoom({
+						user: user
+					}, function(){});
+				}
+			}
+		})
 	});
 
 });

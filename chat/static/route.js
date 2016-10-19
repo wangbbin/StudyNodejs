@@ -1,7 +1,7 @@
 
 angular.module('technodeApp').config(function($routeProvider, $locationProvider){
 	
-	$routeProvider.when('/room/:_roomId', {
+	$routeProvider.when('/rooms/:_roomId', {
 		templateUrl: '/pages/room.html',
 		controller: 'RoomCtrl'
 	}).when('/login', {

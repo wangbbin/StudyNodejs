@@ -11,7 +11,7 @@
 <div class="row">
 	<ul class="room-list clearfix">
 		<li class="room-item" ng-repeat="room in rooms">
-			<div class="room-content" ng-click="enterRoom(room)">
+			<div class="room-content" ng-click="enterRoom(room)" style="cursor:pointer">
 				<h3>
 					{{room.name}}
 					<span class="badge pull-right">
@@ -21,6 +21,7 @@
 				<div class="avatar-list">
 					<span ng-repeat="user in room.users" title="{{user.name}}">
 						<img src="/images/git.png" alt="{{user.email}}" class="img-rounded">
+						{{user.name}}
 					</span>
 				</div>
 			</div>

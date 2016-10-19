@@ -1,10 +1,10 @@
 var db = require('../models');
 
 exports.create = function (message, callback){
-	console.log('save', message.creator)
 	var msg = new db.Message();
 	msg.content = message.content;
 	msg.creator = message.creator;
+	msg._roomId = message._roomId;
 	msg.save(callback);
 };
 

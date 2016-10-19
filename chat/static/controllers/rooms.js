@@ -1,4 +1,4 @@
-angular.module('technodeApp').controller('RoomsCtrl', function ($scope, socket){
+angular.module('technodeApp').controller('RoomsCtrl', function ($scope, $location, socket){
 	socket.emit('getAllRooms');
 
 	socket.on('roomsData', function (rooms){
@@ -24,6 +24,29 @@ angular.module('technodeApp').controller('RoomsCtrl', function ($scope, socket){
 	socket.on('roomAdded', function (room){
 		$scope._rooms.push(room);
 		$scope.searchRoom();
+	});
+
+	$scope.enterRoom = function (room){
+		socket.emit('joinRoom', {
+			user: $scope.me,
+			room: room
+		});
+	};
+
+	socket.once('joinRoom.' + $scope.me._id, function (join) {
+		$location.path('/rooms/' + join.room._id);
+	});
+
+	socket.on('joinRoom', function (join){
+		$scope.rooms.forEach(function (room){
+			if (room._id == join.room._id){
+				room.users.push(join.user);
+			}
+		});
+	});
+
+	$scope.$on('$destroy', function(){
+		socket.removeEventListener(['roomsData','roomAdded', 'joinRoom']);
 	});
 
 });
