@@ -37,6 +37,7 @@ angular.module('technodeApp').controller('RoomsCtrl', function ($scope, $locatio
 		$location.path('/rooms/' + join.room._id);
 	});
 
+	//need refresh roomList, when some one join room or leave room, but not it did not
 	socket.on('joinRoom', function (join){
 		$scope.rooms.forEach(function (room){
 			if (room._id == join.room._id){
