@@ -4,4 +4,7 @@
 	console.log(a);
 	console.log('dsfas');
 	console.log('abcd');
+	console.log('abcd');
+	console.log('abcd');
+	console.log('abcd');
 })(window);
