@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="js/jquery.js"></script>
+	<script src="js/test.js"></script>
+</head>
+<body class="body" onload="">
+	
+<script>
+
+$('body').myTest();
+function hello(){
+	//alert('hello')
+};
+Class = function(){
+	var classPrototype = arguments[arguments.length - 1] || "";  
+	for(var i = 0; i < arguments.length - 1 ; i++){  
+		var superClass = arguments[i];  
+		if(typeof superClass === "function"){  
+			superClass = superClass.prototype;  
+		}  
+		if(!classPrototype.superClass){  
+			classPrototype.superClass = {};  
+		}  
+		for(var m in superClass){  
+			if(superClass.hasOwnProperty(m)){  
+				classPrototype.superClass[m] = superClass[m];  
+			}else{  
+				classPrototype[m] = superClass[m];  
+			}  
+		}  
+	}  
+	var currentClass = function(){  
+		if(this.initialize){  
+			this.initialize.call(this , arguments);  
+		}  
+	};  
+	currentClass.prototype = classPrototype;  
+	return currentClass;  
+};  
+
+var A = Class({  
+	width : "A width",  
+	getWidth : function(){  
+		return "A getWidth";  
+	}  
+});  
+var B = Class(A,{  
+	height : "B height",  
+	getHeight : function(){  
+		return "B getWidth";  
+	},  
+	width : 'B width'  
+});  
+
+var C = Class(A, B , {  
+	width: 'C width',  
+	size : 'C size',  
+	getHeight : function(){  
+		return "C getHeight";  
+	}  
+});  
+
+var b = new B();  
+
+
+//alert(b.width);  
+//alert(b.height);  
+//alert(b.superClass.getWidth());  
+
+// var c = new C();  
+// alert(c.superClass.width);  
+// alert(c.size);  
+// alert(c.superClass.getHeight());
+</script>
+</body>
+</html>

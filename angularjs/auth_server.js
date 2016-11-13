@@ -34,7 +34,7 @@ app.use(expressSession({
 	secret: 'secret',
 	resave: false,
 	saveUninitialized: true,
-	cookie: {maxAge: 60*60*10000},
+	cookie: {maxAge: 60*1000},
 	store: new mongoStore({   //创建新的mongodb数据库
 		//url:'mongodb://localhost/conn',
 		mongooseConnection: mongoose.connection,

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	
+	<script>
+function GetJsonData() {
+    var json = {"owner": "bottle1" , "type": "female", "content": "content1"};
+    return json;
+}
+
+/*$.ajax({
+        type: "POST",
+        url: "http://localhost:3000",
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(GetJsonData()),
+        //data: "{'owner': 'bottle1' , 'type': 'female', 'content': 'ontent1'}",
+        dataType: "json",
+        success: function (message) {
+            console.log(message)
+        },
+        error: function (message) {
+            
+        }
+    });*/
+
+$.ajax({
+        type: "POST",
+        url: "http://localhost:3000",
+        //contentType: "application/json; charset=utf-8",
+        //data: GetJsonData(),
+        data: "owner=bottle1",
+        //data: "{'owner': 'bottle1' , 'type': 'female', 'content': 'ontent1'}",
+        success: function (message) {
+            console.log(message)
+        },
+        error: function (message) {
+            
+        }
+    });
+
+	</script>
+</body>
+</html>
