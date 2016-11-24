@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+<style type="text/css">
+*{margin: 0;padding:0;}
+body{font-size: 13px}
+p.leftmargin {margin-left: 2cm}
+label,span{ margin-top:58px}
+.row { display:table-row;  }
+.col { display:table-cell;  }
+.sp { padding-right: 100px}
+
+#div1 {width:100px;height:300px;border:1px solid #f00;float:left;}
+#div-box1,#div-box2 {border:0px solid #00f;width:100px;float:left;}
+#div2 {width:100px;height:100px;border-top:1px solid #f00}
+#div3 {width:100px;height:98px;border-top:1px solid #f00;border-bottom:1px solid #f00;}
+#div4 {width:100px;height:100px;border-bottom:1px solid #f00;}
+#div5 {width:100px;height:199px;border:1px solid #f00;}
+#div6 {width:100px;height:100px;border:1px solid #f00;border-top:0px;}
+
+.pic_box{width:300px; height:300px; background-color:#beceeb; font-size:0; *font-size:200px; text-align:center;}
+.pic_box img{vertical-align:middle;}
+.pic_box:after{display:inline-block; width:0; height:100%; content:"center"; vertical-align:middle; overflow:hidden;}
+
+
+.center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  background-color: #000;
+  width:50%;
+  height: 50%;
+-webkit-transform: translateX(-50%) translateY(-50%);
+}
+
+ul > li:nth-child(2){
+  background-color: green;
+}
+a[href*="http"]{
+  color: red
+}
+
+</style>
+<script type="text/javascript"> 
+    function steal()  
+    {  
+             /*  iframe = window.frames[1];  
+               iframe.document.Submit("transfer");  */
+    }  
+    </script> 
+</head>
+
+<body onload="steal()">
+<pre>daf</pre>
+<label>&nbsp;</label>
+<label></label>
+<label>a</label>
+<label>123</label>
+<span>c</span>
+<span> </span>
+<button>dfs</button>
+<!-- <iframe src="javascript:alert('xss');" height="0" width="0"></iframe>
+ -->   <iframe name="steal" display="none"> 
+    <form method="POST" name="transfer"　action="http://www.myBank.com/Transfer.php"> 
+    <input type="hidden" name="toBankId" value="11"> 
+    <input type="hidden" name="money" value="1000"> 
+    </form> 
+    </iframe> 
+  <input type="hidden" name="hash" value="hide">
+<ol>
+  <li class="li">rrr</li>
+  <li class="li">ppp</li>
+  <li class="li">ggg</li>
+</ol>
+<a href="http12">http</a><a href="wwshttp">wws</a>
+<a href="javascript:return false;">javas</a>
+<a href="javascript:void(0);">javas1</a>
+<a href="javascript:;">javas1</a>
+<table>
+  <tr><td>123</td><td>3</td></tr>
+  <tr><td>sadfasdf</td><td>3</td></tr>
+</table>
+<div class="container">
+  <div class="row">
+    <div class="col sp">122</div>
+    <div class="col">11</div>
+  </div>
+  <div class="row">
+    <div class="col sp">44</div>
+    <div class="col">22</div>
+  </div>
+</div>
+
+<div id="div1"></div>
+ 
+<div id="div-box1">
+    <div id="div2"></div>
+    <div id="div3"></div>
+    <div id="div4"></div>
+</div>
+ 
+<div id="div-box2">
+    <div id="div5"></div>
+    <div id="div6"></div>
+</div>
+<div style="clear:both"></div>
+
+<div class="pic_box">
+    <img src="http://image.zhangxinxu.com/image/study/s/s256/mm1.jpg" />
+</div>
+ <div class="center"></div>
+
+ <span class="f">123123</span>
+ <div class="f">dsfadsfa</div>
+ <ul id="ulli">
+   <li>a</li>
+   <li>b</li>
+   <li>1</li>
+   <li>5</li>
+   <li onclick="clickLi(event,this)">d</li>
+ </ul>
+ <form action="">
+  <button name="button1">button1</button>
+  <button name="button2">button2</button>
+</form>
+<script type="text/javascript" src="lodash.js"></script>
+<script type="text/javascript" src="before.js"></script>
+<script>
+  //document.getElementById('div1').innerHTML = '<span style="display:none;">span</span><script defer>alert()<\/script>';
+//document.write('d');
+
+
+  function fn1(a){
+    console.log(a);
+    var a=2;
+    function a(){};
+    console.log(a);
+  }
+  fn1(1);
+
+  function fn(a){
+    //var a;
+    function a(){};
+    console.log(a);
+    a=2;
+    console.log(a);
+  }
+  fn(1);
+
+  var o = {};
+  function test(a, o){
+     console.log(a);
+    var a=2;
+    console.log(a);
+  }
+  test(1);
+
+
+  var liList = document.getElementsByClassName('li');
+  for(var i = 0 ; i < liList.length;i++){
+    liList[i].onclick=function(){
+      alert(i);
+    };
+  }
+
+document.forms[0].button1.onclick = function(){
+  document.forms[0].button2.click();
+}
+document.forms[0].button2.onclick = function(){
+  alert(event)
+}
+
+function log(){
+  console.log.apply(this, arguments);
+}
+log(1,4,6)
+
+/*  setTimeout(function(){
+    document.write('d');
+  },1000)*/
+
+var arr = [3,4,2,1, 5,8,7,9,6];
+console.log(arr.sort(function(a,b, ar){
+  var r =  Math.random() > .5 ? -1:1;
+  return r;
+}));
+
+function shuffle(array){
+  var _array = array.concat();
+
+  for (var i = _array.length;i--;) {
+    var j = Math.floor(Math.random()*(i+1));
+    var temp = _array[i];
+    _array[i] = _array[j];
+    _array[j] = temp;
+  };
+
+  return _array;
+}
+
+var _shuffle = function (set) {
+  var length = set.length;
+  var shuffled = Array(length);
+  for(var index = 0,rand; index <length;index++) {
+    rand = _.random(0,index);
+    if(rand !== index) {
+      shuffled[index] = shuffled[rand];
+    }
+    shuffled[rand] = set[index];
+  }
+  return shuffled;
+} ;
+
+//test onclick
+var li = document.querySelectorAll('#ulli>li');
+for(var ii=0;ii<li.length-1;ii++){
+  li[ii].onclick = function(){
+    console.log(this.innerHTML+=1);
+  }
+}
+function clickLi(evt){
+  console.log(this);
+}
+</script>
+<script type="text/javascript" src="after.js"></script>
+<div>
+  finish div
+</div>
+</body>
+
+</html>
