@@ -21,3 +21,11 @@ function power(n,p) {
   for(var i=0;i<p;i++) k*=n;  
   return k;  
 } 
+
+// IE6,7支持inline元素转换成inline-block，但不支持block元素转换成inline-block，所以非inline元素在IE6,7下要转换成inline-block，需先转换成inline，然后触发hasLayout，以此来获得和inline-block类似的效果；你可以这样：
+// 全兼容的inline-block：
+// div {
+//   display: inline-block;
+//   *display: inline;
+//   *zoom: 1;
+// }
