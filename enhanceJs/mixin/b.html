@@ -23,10 +23,15 @@ label,span{ margin-top:58px}
 #div5 {width:100px;height:199px;border:1px solid #f00;}
 #div6 {width:100px;height:100px;border:1px solid #f00;border-top:0px;}
 
+/*水平垂直居中*/
 .pic_box{width:300px; height:300px; background-color:#beceeb; font-size:0; *font-size:200px; text-align:center;}
 .pic_box img{vertical-align:middle;}
 .pic_box:after{display:inline-block; width:0; height:100%; content:"center"; vertical-align:middle; overflow:hidden;}
-
+/*清除浮动*/
+.box{padding:10px; background:gray;}
+.l{float:left;}
+.fix{*zoom:1;}
+.fix:after{display:block; content:"clear"; height:0; clear:both; overflow:hidden; visibility:hidden;}
 
 
 .center {
@@ -55,7 +60,9 @@ a[href*="http"]{
     }  
     </script> 
 </head>
-
+<div class="box fix">
+  <img class="l" src="http://image.zhangxinxu.com/image/study/s/s256/mm1.jpg" />
+</div>
 <body onload="steal()">
 <pre>daf</pre>
 <label>&nbsp;</label>
@@ -111,9 +118,9 @@ a[href*="http"]{
 </div>
 <div style="clear:both"></div>
 
-<!-- <div class="pic_box">
+<div class="pic_box">
     <img src="http://image.zhangxinxu.com/image/study/s/s256/mm1.jpg" />
-</div> -->
+</div>
 
  <!-- <div class="center"></div> -->
 
@@ -242,29 +249,6 @@ ul.onclick = function(event){
     alert();
 };
 </script>
- <style>
-        .outer{
-            border: 1px solid black;
-            
-            height: 50px;
-        }
-        .outer>.inner:nth-child(1){
-          background-color: #00ff00;
-        }
-        .outer>.inner:nth-child(1){
-          width: 300px;
-        }
-        .inner{
-            height: 50px;
-            background-color: #ff4400;
-            float: left;
-        }
-    </style>
-<div class="outer">
-        <div class="inner"></div>
-        <div class="inner"></div>
-        <div class="inner"></div>
-</div>
 
 <style>
 .main,.sitebar {
